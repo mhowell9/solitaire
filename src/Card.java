@@ -52,13 +52,16 @@ public class Card {
         return this.faceValueToString() + " of " + this.suit;
     }
 
-    public boolean canStack(Card card) {
-        switch (this.suit) {
-            case CLUBS, SPADES:
-                if (card.suit == Suit.CLUBS || card.suit == Suit.SPADES) return false;
-            case HEARTS, DIAMONDS:
-                if (card.suit == Suit.HEARTS || card.suit == Suit.DIAMONDS) return false;
-        }
-        return this.faceValue == card.faceValue - 1;
+    public boolean canStack(Card other) {
+        return switch (this.suit) {
+            case CLUBS, SPADES -> {
+                if (other.suit == Suit.CLUBS || other.suit == Suit.SPADES) yield false;
+                yield this.faceValue - 1 == other.faceValue;
+            }
+            case HEARTS, DIAMONDS -> {
+                if (other.suit == Suit.HEARTS || other.suit == Suit.DIAMONDS) yield false;
+                yield this.faceValue - 1 == other.faceValue;
+            }
+        };
     }
 }

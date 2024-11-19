@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CardPanel extends DraggablePanel {
 
@@ -112,6 +116,15 @@ public class CardPanel extends DraggablePanel {
 
     public String toString() {
         return this.card.toString();
+    }
+
+    public static CardPanel[] generateRandomDeck() {
+        ArrayList<CardPanel> cardDeck = new ArrayList<CardPanel>();
+        for (int i = 0; i < 52; i++) {
+            cardDeck.add(new CardPanel(Suit.values()[i / 13], (i % 13) + 1));
+        }
+        Collections.shuffle(cardDeck);
+        return cardDeck.toArray(new CardPanel[52]);
     }
 
     @Override

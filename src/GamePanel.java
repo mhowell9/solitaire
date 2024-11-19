@@ -28,8 +28,8 @@ public class GamePanel {
 
     public static void main(String[] args) {
         new GamePanel();
-        CardPanel card1 = new CardPanel(Suit.CLUBS, 3, 10, 10);
-        CardPanel card2 = new CardPanel(Suit.DIAMONDS, 5, 200, 10);
+        CardPanel card1 = new CardPanel(Suit.CLUBS, 5, 10, 10);
+        CardPanel card2 = new CardPanel(Suit.DIAMONDS, 4, 200, 10);
         CardPanel card3 = new CardPanel(Suit.HEARTS, 5, 200, 10);
         layerPane.add(card1);
         card1.flip();
@@ -37,10 +37,9 @@ public class GamePanel {
         card2.flip();
         layerPane.add(card3);
         card3.flip();
-        CardStack cardStack = new CardStack(400, 50);
-        cardStack.push(card3);
-        cardStack.push(card2);
+        PlayStack cardStack = new PlayStack(400, 50);
         cardStack.push(card1);
-        System.out.println(Arrays.toString(CardStack.getCardsOnTop(card3)));
+        cardStack.push(card2);
+        cardStack.push(card3);
     }
 }
