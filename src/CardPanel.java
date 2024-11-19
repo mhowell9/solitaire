@@ -1,11 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class CardPanel extends DraggablePanel {
 
     final private Card card;
     final public static int SIZE_X = 65;
     final public static int SIZE_Y = 100;
+    private Point origin;
+    private CardStack stack;
+    private CardPanel[] movingCards;
 
     final private static ImageIcon CARD_BACK = new ImageIcon("assets/card_back.png");
     final private static ImageIcon CARD_BASE = new ImageIcon("assets/card_base.png");
@@ -22,13 +26,35 @@ public class CardPanel extends DraggablePanel {
         this(suit, faceValue, 0, 0);
     }
 
+    public CardPanel(Suit suit, int faceValue, Point point) {
+        this(suit, faceValue, point.x, point.y);
+    }
+
     public CardPanel(Suit suit, int faceValue, int posX, int posY) {
         this.card = new Card(suit, faceValue);
+        this.stack = null;
         this.setLayout(null);
         this.setBounds(posX, posY, SIZE_X, SIZE_Y);
         this.redraw();
         this.setOpaque(false);
         this.setVisible(true);
+    }
+
+    public Card getCard() {
+        return this.card;
+    }
+
+    public boolean isStackTop() {
+        if (this.stack == null) return true;
+        return this.stack.peek() == this;
+    }
+
+    public CardStack getStack() {
+        return this.stack;
+    }
+
+    public void setStack(CardStack stack) {
+        this.stack = stack;
     }
 
     public void redraw() {
@@ -82,5 +108,33 @@ public class CardPanel extends DraggablePanel {
     public void flip() {
         card.flip();
         redraw();
+    }
+
+    public String toString() {
+        return this.card.toString();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        super.mouseDragged(e);
+        if (this.movingCards != null) DraggableStack.moveCardsTogether(this.movingCards);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        this.origin = getLocation();
+        super.mousePressed(e);
+        if (!this.isStackTop()) {
+            this.movingCards = CardStack.getCardsOnTop(this);
+            if (this.movingCards == null) return;
+            for (CardPanel cardPanel : this.movingCards) {
+                GamePanel.layerPane.moveToFront(cardPanel);
+            }
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        this.movingCards = null;
     }
 }

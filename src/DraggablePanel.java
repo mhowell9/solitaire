@@ -18,7 +18,7 @@ public class DraggablePanel extends JPanel implements MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println(e.getX() + " " + e.getY());
+
     }
 
     @Override
