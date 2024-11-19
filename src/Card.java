@@ -22,6 +22,10 @@ public class Card {
         return this.faceValue;
     }
 
+    public boolean isFaceUp() {
+        return faceUp;
+    }
+
     public String faceValueToString() throws IllegalStateException {
         if (this.faceValue >= 2 && this.faceValue <= 10) return String.valueOf(this.faceValue);
         return switch (this.faceValue) {
@@ -29,6 +33,17 @@ public class Card {
             case 11 -> "Jack";
             case 12 -> "Queen";
             case 13 -> "King";
+            default -> throw new IllegalStateException("Face value is invalid: " + this.faceValue);
+        };
+    }
+
+    public char faceValueToChar() throws IllegalStateException {
+        if (this.faceValue >= 2 && this.faceValue <= 10) return Integer.toString(this.faceValue).charAt(0);
+        return switch (this.faceValue) {
+            case 1 -> 'A';
+            case 11 -> 'J';
+            case 12 -> 'Q';
+            case 13 -> 'K';
             default -> throw new IllegalStateException("Face value is invalid: " + this.faceValue);
         };
     }
