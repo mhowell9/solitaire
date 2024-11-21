@@ -1,10 +1,12 @@
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class CardStack {
 
     public static final int OFFSET = 25;
-    private CardPanel[] cards;
-    private int top;
+    protected CardPanel[] cards;
+    protected int top;
     private Point anchor;
     private static final int SIZE = 13;
 
@@ -16,6 +18,17 @@ public class CardStack {
         this.cards = new CardPanel[SIZE];
         this.top = 0;
         this.anchor = point;
+    }
+
+    public CardStack(Point point, int size) {
+        this.cards = new CardPanel[size];
+        this.top = 0;
+        this.anchor = point;
+    }
+
+    public CardStack(CardPanel[] cards, Point point) {
+        this(point, 52);
+        this.push(cards);
     }
 
     public boolean isEmpty() {
@@ -37,7 +50,14 @@ public class CardStack {
         this.cards[this.top] = card;
         card.setStack(this);
         card.setLocation(anchor.x, anchor.y + (top * OFFSET));
+        GamePanel.playSpace.moveToFront(card);
         this.top++;
+    }
+
+    public void push(CardPanel[] cards) {
+        for (CardPanel card : cards) {
+            push(card);
+        }
     }
 
     public static CardPanel[] getCardsOnTop(CardPanel card) {
@@ -55,6 +75,15 @@ public class CardStack {
             newArrIndex++;
         }
         return returnArr;
+    }
+
+    public static CardStack generateRandomDeck() {
+        ArrayList<CardPanel> cardDeck = new ArrayList<CardPanel>();
+        for (int i = 0; i < 52; i++) {
+            cardDeck.add(new CardPanel(Suit.values()[i / 13], (i % 13) + 1));
+        }
+        Collections.shuffle(cardDeck);
+        return new CardStack(cardDeck.toArray(new CardPanel[52]), new Point(0, 1000));
     }
 
     public void setAnchor(Point point) {

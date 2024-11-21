@@ -16,4 +16,8 @@ public class PlayStack extends CardStack{
             throw new CardUnstackableException(card.getCard(), super.peek().getCard());
         super.push(card);
     }
+
+    public void setupPush(CardPanel card) {
+        super.push(card);
+    }
 }

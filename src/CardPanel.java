@@ -1,10 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class CardPanel extends DraggablePanel {
 
@@ -42,6 +40,7 @@ public class CardPanel extends DraggablePanel {
         this.redraw();
         this.setOpaque(false);
         this.setVisible(true);
+        GamePanel.playSpace.add(this);
     }
 
     public Card getCard() {
@@ -118,17 +117,11 @@ public class CardPanel extends DraggablePanel {
         return this.card.toString();
     }
 
-    public static CardPanel[] generateRandomDeck() {
-        ArrayList<CardPanel> cardDeck = new ArrayList<CardPanel>();
-        for (int i = 0; i < 52; i++) {
-            cardDeck.add(new CardPanel(Suit.values()[i / 13], (i % 13) + 1));
-        }
-        Collections.shuffle(cardDeck);
-        return cardDeck.toArray(new CardPanel[52]);
-    }
-
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (this.stack == GamePanel.cardBank) return;
+        if (this.stack == GamePanel.cardRiver && this != GamePanel.cardRiver.peek()) return;
+        if (this.stack.getClass() == PlayStack.class && !this.card.isFaceUp()) return;
         super.mouseDragged(e);
         if (this.movingCards != null) DraggableStack.moveCardsTogether(this.movingCards);
     }
@@ -141,7 +134,7 @@ public class CardPanel extends DraggablePanel {
             this.movingCards = CardStack.getCardsOnTop(this);
             if (this.movingCards == null) return;
             for (CardPanel cardPanel : this.movingCards) {
-                GamePanel.layerPane.moveToFront(cardPanel);
+                GamePanel.playSpace.moveToFront(cardPanel);
             }
         }
     }
@@ -149,5 +142,12 @@ public class CardPanel extends DraggablePanel {
     @Override
     public void mouseReleased(MouseEvent e) {
         this.movingCards = null;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (this.stack.getClass() != CardBank.class) return;
+        GamePanel.cardRiver.push(this);
+        this.flip();
     }
 }
