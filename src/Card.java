@@ -37,13 +37,13 @@ public class Card {
         };
     }
 
-    public char faceValueToChar() throws IllegalStateException {
-        if (this.faceValue >= 2 && this.faceValue <= 10) return Integer.toString(this.faceValue).charAt(0);
+    public String faceValueToCardLabel() throws IllegalStateException {
+        if (this.faceValue >= 2 && this.faceValue <= 10) return Integer.toString(this.faceValue);
         return switch (this.faceValue) {
-            case 1 -> 'A';
-            case 11 -> 'J';
-            case 12 -> 'Q';
-            case 13 -> 'K';
+            case 1 -> "A";
+            case 11 -> "J";
+            case 12 -> "Q";
+            case 13 -> "K";
             default -> throw new IllegalStateException("Face value is invalid: " + this.faceValue);
         };
     }

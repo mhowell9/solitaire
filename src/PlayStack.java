@@ -11,13 +11,16 @@ public class PlayStack extends CardStack{
     }
 
     @Override
+    public CardPanel pop() {
+        CardPanel card = super.pop();
+        if (!isEmpty() && !this.peek().getCard().isFaceUp()) this.peek().flip();
+        return card;
+    }
+
+    @Override
     public void push(CardPanel card) {
         if (!super.isEmpty() && !super.peek().getCard().canStack(card.getCard()))
             throw new CardUnstackableException(card.getCard(), super.peek().getCard());
-        super.push(card);
-    }
-
-    public void setupPush(CardPanel card) {
         super.push(card);
     }
 }

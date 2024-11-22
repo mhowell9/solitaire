@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class CardPanel extends DraggablePanel {
 
@@ -88,7 +86,7 @@ public class CardPanel extends DraggablePanel {
                 }
                 case null, default -> throw new IllegalStateException("");
             }
-            JLabel faceValue = new JLabel(String.valueOf(card.faceValueToChar()));
+            JLabel faceValue = new JLabel(card.faceValueToCardLabel());
             faceValue.setBounds(4, 0, SIZE_X - 4, 20);
             faceValue.setFont(new Font(faceValue.getFont().getName(), Font.BOLD, 20));
             if (card.getSuit() == Suit.DIAMONDS || card.getSuit() == Suit.HEARTS) faceValue.setForeground(Color.RED);
@@ -141,6 +139,23 @@ public class CardPanel extends DraggablePanel {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        int release_x = this.getX() + e.getX(), release_y = this.getY() + e.getY();
+        //System.out.println(release_x + ", " + release_y);
+        if (release_x >= 820 && release_x <= 884) {
+            if (release_y >= 20 && release_y <= 119) {
+                if (GamePanel.heartStack.canStackCard(this)) GamePanel.heartStack.push(getStack().pop());
+            }
+            if (release_y >= 150 && release_y <= 249) {
+                if (GamePanel.diamondStack.canStackCard(this)) GamePanel.diamondStack.push(getStack().pop());
+            }
+            if (release_y >= 280 && release_y <= 379) {
+                if (GamePanel.clubStack.canStackCard(this)) GamePanel.clubStack.push(getStack().pop());
+            }
+            if (release_y >= 410 && release_y <= 509) {
+                if (GamePanel.spadeStack.canStackCard(this)) GamePanel.spadeStack.push(getStack().pop());
+            }
+        }
+        if (this.stack != GamePanel.cardBank) this.stack.redrawStack();
         this.movingCards = null;
     }
 

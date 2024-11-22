@@ -36,10 +36,12 @@ public class CardStack {
     }
 
     public CardPanel peek() {
+        if (isEmpty()) throw new CardStackEmptyException("Attempt to access top of empty stack");
         return this.cards[this.top - 1];
     }
 
     public CardPanel pop() {
+        if (isEmpty()) throw new CardStackEmptyException("Attempt to remove item from empty stack");
         this.top--;
         CardPanel card = this.cards[this.top];
         this.cards[this.top] = null;
@@ -47,6 +49,14 @@ public class CardStack {
     }
 
     public void push(CardPanel card) {
+        this.cards[this.top] = card;
+        card.setStack(this);
+        card.setLocation(anchor.x, anchor.y + (top * OFFSET));
+        GamePanel.playSpace.moveToFront(card);
+        this.top++;
+    }
+
+    public final void forcePush(CardPanel card) {
         this.cards[this.top] = card;
         card.setStack(this);
         card.setLocation(anchor.x, anchor.y + (top * OFFSET));
@@ -99,5 +109,10 @@ public class CardStack {
         for (int i = 0; i < top; i++) {
             this.cards[i].setLocation(anchor.x, anchor.y + (i * OFFSET));
         }
+    }
+
+    @Override
+    public String toString() {
+        return "CardStack at " + anchor;
     }
 }
