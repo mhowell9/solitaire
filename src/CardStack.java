@@ -45,13 +45,14 @@ public class CardStack {
         this.top--;
         CardPanel card = this.cards[this.top];
         this.cards[this.top] = null;
+        redrawStack();
         return card;
     }
 
     public void push(CardPanel card) {
         this.cards[this.top] = card;
         card.setStack(this);
-        card.setLocation(anchor.x, anchor.y + (top * OFFSET));
+        redrawStack();
         GamePanel.playSpace.moveToFront(card);
         this.top++;
     }
@@ -102,6 +103,10 @@ public class CardStack {
 
     public void setAnchor(int x, int y) {
         this.anchor = new Point(x, y);
+    }
+
+    public Point getAnchor() {
+        return this.anchor;
     }
 
     public void redrawStack() {

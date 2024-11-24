@@ -14,4 +14,12 @@ public class CardBank extends CardStack {
         super.push(card);
         card.setLocation(POS_X, POS_Y);
     }
+
+    @Override
+    public void redrawStack() {
+        if (top == 0) return;
+        for (int i = 0; i < top; i++) {
+            this.cards[i].setLocation(POS_X, POS_Y);
+        }
+    }
 }

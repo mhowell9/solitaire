@@ -14,7 +14,7 @@ public class SuitStack extends CardStack {
     @Override
     public void push(CardPanel card) {
         super.push(card);
-        card.setLocation(x, y);
+        if (top == 13) GamePanel.checkForWin();
     }
 
     public boolean canStackCard(CardPanel card) {
@@ -22,5 +22,13 @@ public class SuitStack extends CardStack {
         if (isEmpty() && card.getCard().getFaceValue() == 1) return true;
         if (isEmpty()) return false;
         return (card.getCard().getFaceValue() == peek().getCard().getFaceValue() + 1);
+    }
+
+    @Override
+    public void redrawStack() {
+        if (top == 0) return;
+        for (int i = 0; i < top; i++) {
+            this.cards[i].setLocation(x, y);
+        }
     }
 }

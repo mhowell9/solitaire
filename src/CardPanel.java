@@ -104,6 +104,8 @@ public class CardPanel extends DraggablePanel {
             this.add(suit);
         }
         this.add(base);
+        this.revalidate();
+        this.repaint();
     }
 
     public void flip() {
@@ -113,6 +115,16 @@ public class CardPanel extends DraggablePanel {
 
     public String toString() {
         return this.card.toString();
+    }
+
+    private static boolean pointInsideStackBounds(Point point, CardPanel card) {
+        if (card.getX() > point.x || card.getX() + SIZE_X < point.x) return false;
+        return (card.getY() <= point.y || card.getY() + SIZE_Y >= point.y);
+    }
+
+    private static boolean pointInsideStackBounds(Point point, Point pointStack) {
+        if (pointStack.x > point.x || pointStack.x + SIZE_X < point.x) return false;
+        return (pointStack.y <= point.y || pointStack.y + SIZE_Y >= point.y);
     }
 
     @Override
@@ -140,8 +152,7 @@ public class CardPanel extends DraggablePanel {
     @Override
     public void mouseReleased(MouseEvent e) {
         int release_x = this.getX() + e.getX(), release_y = this.getY() + e.getY();
-        //System.out.println(release_x + ", " + release_y);
-        if (release_x >= 820 && release_x <= 884) {
+        if (movingCards == null && release_x >= 820 && release_x <= 884) {
             if (release_y >= 20 && release_y <= 119) {
                 if (GamePanel.heartStack.canStackCard(this)) GamePanel.heartStack.push(getStack().pop());
             }
@@ -155,6 +166,27 @@ public class CardPanel extends DraggablePanel {
                 if (GamePanel.spadeStack.canStackCard(this)) GamePanel.spadeStack.push(getStack().pop());
             }
         }
+        for (int i = 0; i < 7; i++) {
+            if (GamePanel.playStacks[i] == this.stack) continue;
+            if (GamePanel.playStacks[i].isEmpty()) {
+                if (card.getFaceValue() != 13) continue;
+                if (!pointInsideStackBounds(new Point(release_x, release_y), GamePanel.playStacks[i].getAnchor()))
+                    continue;
+            } else {
+                if (!pointInsideStackBounds(new Point(release_x, release_y), GamePanel.playStacks[i].peek())) continue;
+                if (!GamePanel.playStacks[i].peek().card.canStack(this.card)) continue;
+            }
+
+            if (movingCards == null) {
+                GamePanel.playStacks[i].push(getStack().pop());
+            } else {
+                CardStack originStack = getStack();
+                for (CardPanel card : movingCards) {
+                    originStack.pop();
+                    GamePanel.playStacks[i].push(card);
+                }
+            }
+        }
         if (this.stack != GamePanel.cardBank) this.stack.redrawStack();
         this.movingCards = null;
     }
@@ -162,7 +194,8 @@ public class CardPanel extends DraggablePanel {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (this.stack.getClass() != CardBank.class) return;
-        GamePanel.cardRiver.push(this);
+        GamePanel.cardRiver.push(GamePanel.cardBank.pop());
         this.flip();
+        this.stack.redrawStack();
     }
 }
