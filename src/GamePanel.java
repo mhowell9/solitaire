@@ -30,16 +30,12 @@ public class GamePanel {
     private static void createGamePanel() {
         gameFrame = new JFrame("Solitaire");
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // size is wonky depending on OS, maybe try and find fix?
-        gameFrame.setSize(WIDTH + 16, HEIGHT + 39);
         gameFrame.setResizable(false);
-        gameFrame.setLayout(null);
-        gameFrame.setVisible(true);
 
         playSpace = new JLayeredPane();
-        playSpace.setBounds(0, 0, WIDTH, HEIGHT);
-        playSpace.setVisible(true);
+        playSpace.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         playSpace.setLayout(null);
+        playSpace.setVisible(true);
 
         JLabel background = new JLabel(BACKGROUND);
         background.setBounds(0, 0, WIDTH, HEIGHT);
@@ -52,6 +48,9 @@ public class GamePanel {
 
         playSpace.add(bankClickable);
         playSpace.add(background);
+
+        gameFrame.pack();
+        gameFrame.setVisible(true);
     }
 
     /**
@@ -88,6 +87,8 @@ public class GamePanel {
 
     public static void main(String[] args) {
         createGamePanel();
+        gameFrame.pack();
+        gameFrame.setVisible(true);
         setUpPlaySpace();
     }
 
