@@ -1,5 +1,10 @@
 import java.awt.*;
 
+/**
+ * Represents the pile of cards that cards are drawn from in solitaire
+ * @author mhowell9
+ */
+
 public class CardBank extends CardStack {
 
     private static final int POS_X = 20;

@@ -1,3 +1,10 @@
+/**
+ * Class that holds the card data of a CardPanel for solitaire.
+ * faceValue is represented by an integer from 1-13 following the order ace-king respectively.
+ * Cards are by default face down.
+ * @author mhowell9
+ */
+
 public class Card {
 
     private boolean faceUp;
@@ -5,6 +12,7 @@ public class Card {
     final private int faceValue;
 
     public Card(Suit suit, int faceValue) {
+        if (faceValue < 1 || faceValue > 13) throw new IllegalArgumentException("face value must be between 1 and 13");
         this.suit = suit;
         this.faceValue = faceValue;
         this.faceUp = false;
@@ -26,7 +34,7 @@ public class Card {
         return faceUp;
     }
 
-    public String faceValueToString() throws IllegalStateException {
+    public String faceValueToString() {
         if (this.faceValue >= 2 && this.faceValue <= 10) return String.valueOf(this.faceValue);
         return switch (this.faceValue) {
             case 1 -> "Ace";
@@ -37,7 +45,7 @@ public class Card {
         };
     }
 
-    public String faceValueToCardLabel() throws IllegalStateException {
+    public String faceValueToCardLabel() {
         if (this.faceValue >= 2 && this.faceValue <= 10) return Integer.toString(this.faceValue);
         return switch (this.faceValue) {
             case 1 -> "A";
@@ -52,6 +60,13 @@ public class Card {
         return this.faceValueToString() + " of " + this.suit;
     }
 
+    /**
+     * Checks if a card can be stacked on top of another for the purposes of PlayStack logic
+     * @param other
+     *      the card you are trying to stack a card on top of
+     * @return
+     *      true if the card is stackable
+     */
     public boolean canStack(Card other) {
         return switch (this.suit) {
             case CLUBS, SPADES -> {

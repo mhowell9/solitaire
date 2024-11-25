@@ -2,6 +2,12 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * Panel that sits underneath CardBank, allowing the card bank to be restocked with cards from
+ * the river after it is depleted.
+ * @author mhowell9
+ */
+
 public class CardBankClickable extends JPanel implements MouseListener {
 
     private static final int POS_X = 20;
@@ -20,23 +26,14 @@ public class CardBankClickable extends JPanel implements MouseListener {
         GamePanel.cardRiver.pushToBank();
     }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
+    // UNUSED OVERRIDES
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
+    public void mousePressed(MouseEvent e) {}
     @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
+    public void mouseReleased(MouseEvent e) {}
     @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
+    public void mouseEntered(MouseEvent e) {}
+    @Override
+    public void mouseExited(MouseEvent e) {}
 }

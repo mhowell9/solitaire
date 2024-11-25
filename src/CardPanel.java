@@ -2,14 +2,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
+/**
+ * A type of DraggablePanel that represents a card in the solitaire game.
+ * Automatically adds new CardPanels to playSpace.
+ * @author mhowell9
+ */
+
 public class CardPanel extends DraggablePanel {
 
     final private Card card;
     final public static int SIZE_X = 65;
     final public static int SIZE_Y = 100;
-    private Point origin;
     private CardStack stack;
     private CardPanel[] movingCards;
+
+    // ASSETS
 
     final private static ImageIcon CARD_BACK = new ImageIcon("assets/card_back.png");
     final private static ImageIcon CARD_BASE = new ImageIcon("assets/card_base.png");
@@ -24,10 +31,6 @@ public class CardPanel extends DraggablePanel {
 
     public CardPanel(Suit suit, int faceValue) {
         this(suit, faceValue, 0, 0);
-    }
-
-    public CardPanel(Suit suit, int faceValue, Point point) {
-        this(suit, faceValue, point.x, point.y);
     }
 
     public CardPanel(Suit suit, int faceValue, int posX, int posY) {
@@ -59,9 +62,12 @@ public class CardPanel extends DraggablePanel {
     }
 
     public void redraw() {
+        // no need to draw if out of bounds
+        if (this.getX() > GamePanel.WIDTH || this.getY() > GamePanel.HEIGHT) return;
+
         this.removeAll();
-        ImageIcon image = (card.isFaceUp()) ? CARD_BASE : CARD_BACK;
-        JLabel base = new JLabel(image);
+        ImageIcon baseImage = (card.isFaceUp()) ? CARD_BASE : CARD_BACK;
+        JLabel base = new JLabel(baseImage);
         base.setBounds(0, 0, SIZE_X, SIZE_Y);
         base.setOpaque(false);
 
@@ -117,11 +123,30 @@ public class CardPanel extends DraggablePanel {
         return this.card.toString();
     }
 
+    /**
+     * helper method to check if a point is inside a card's bounds
+     * @param point
+     *      point to be checked
+     * @param card
+     *      the card
+     * @return
+     *      true if the point is inside the card's bounds
+     */
     private static boolean pointInsideStackBounds(Point point, CardPanel card) {
         if (card.getX() > point.x || card.getX() + SIZE_X < point.x) return false;
         return (card.getY() <= point.y || card.getY() + SIZE_Y >= point.y);
     }
 
+    /**
+     * checks if a point is inside the bounds of a cardStack.
+     * the main purpose of this is if the stack is empty
+     * @param point
+     *      point to be checked
+     * @param pointStack
+     *      anchor point of the stack
+     * @return
+     *      true if point is within the stacks bounds (same size as CardPanel)
+     */
     private static boolean pointInsideStackBounds(Point point, Point pointStack) {
         if (pointStack.x > point.x || pointStack.x + SIZE_X < point.x) return false;
         return (pointStack.y <= point.y || pointStack.y + SIZE_Y >= point.y);
@@ -129,20 +154,27 @@ public class CardPanel extends DraggablePanel {
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        // ignore inputs on cardBank and cards not on top of cardRiver
         if (this.stack == GamePanel.cardBank) return;
         if (this.stack == GamePanel.cardRiver && this != GamePanel.cardRiver.peek()) return;
+
+        // only allow movement of cards that are face up in PlayStacks
         if (this.stack.getClass() == PlayStack.class && !this.card.isFaceUp()) return;
         super.mouseDragged(e);
+
         if (this.movingCards != null) DraggableStack.moveCardsTogether(this.movingCards);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        this.origin = getLocation();
         super.mousePressed(e);
+
+        // Move cards together if necessary (card pressed is not top of stack)
         if (!this.isStackTop()) {
             this.movingCards = CardStack.getCardsOnTop(this);
             if (this.movingCards == null) return;
+
+            // Bring all the cards to the front when moving a stack
             for (CardPanel cardPanel : this.movingCards) {
                 GamePanel.playSpace.moveToFront(cardPanel);
             }
@@ -151,7 +183,11 @@ public class CardPanel extends DraggablePanel {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        // Cards are only popped from a stack if it is pushed onto another stack
         int release_x = this.getX() + e.getX(), release_y = this.getY() + e.getY();
+
+        // Check if card is within bounds of SuitStack and is stackable
+        // Should clean this up at some point
         if (movingCards == null && release_x >= 820 && release_x <= 884) {
             if (release_y >= 20 && release_y <= 119) {
                 if (GamePanel.heartStack.canStackCard(this)) GamePanel.heartStack.push(getStack().pop());
@@ -166,8 +202,13 @@ public class CardPanel extends DraggablePanel {
                 if (GamePanel.spadeStack.canStackCard(this)) GamePanel.spadeStack.push(getStack().pop());
             }
         }
+
+        // Check if card is dropped on top of play stack
         for (int i = 0; i < 7; i++) {
             if (GamePanel.playStacks[i] == this.stack) continue;
+
+            // Allow kings to be put on top of empty stack
+            // Break the loop early if conditions are not met
             if (GamePanel.playStacks[i].isEmpty()) {
                 if (card.getFaceValue() != 13) continue;
                 if (!pointInsideStackBounds(new Point(release_x, release_y), GamePanel.playStacks[i].getAnchor()))
@@ -178,21 +219,25 @@ public class CardPanel extends DraggablePanel {
             }
 
             if (movingCards == null) {
+                // Singular card
                 GamePanel.playStacks[i].push(getStack().pop());
             } else {
+                // Stack of cards
                 CardStack originStack = getStack();
                 for (CardPanel card : movingCards) {
+                    // Done in this way to keep order the same
                     originStack.pop();
                     GamePanel.playStacks[i].push(card);
                 }
             }
         }
-        if (this.stack != GamePanel.cardBank) this.stack.redrawStack();
+        stack.redrawStack();
         this.movingCards = null;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        // Used to get cards from the bank and add to the river
         if (this.stack.getClass() != CardBank.class) return;
         GamePanel.cardRiver.push(GamePanel.cardBank.pop());
         this.flip();

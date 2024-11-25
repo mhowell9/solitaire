@@ -1,5 +1,9 @@
 import java.awt.*;
-import java.util.Arrays;
+
+/**
+ * Represents the stack of cards from the card bank that are "in play"
+ * @author mhowell9
+ */
 
 public class CardRiver extends CardStack {
 
@@ -28,8 +32,15 @@ public class CardRiver extends CardStack {
         }
     }
 
+    /**
+     * Because of the unique conditions of the visual representation of this stack, it is drawn
+     * a few different ways. The main idea is only the top 3 cards are displayed. The stack is
+     * always shown at the anchor, so the offset for the top is different depending on how many
+     * cards are in the stack
+     */
     @Override
     public void redrawStack() {
+        // Clean up if I get the chance
         switch (top) {
             case (0): return;
             case (1): {cards[0].setLocation(POS_X, POS_Y); GamePanel.playSpace.moveToFront(cards[0]); return;}
