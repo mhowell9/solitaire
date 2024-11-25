@@ -22,7 +22,7 @@ public class GamePanel {
 
     // ASSETS
 
-    public static final ImageIcon BACKGROUND = new ImageIcon("assets/game_board.png");
+    public static final ImageIcon BACKGROUND = new ImageIcon(GamePanel.class.getResource("assets/game_board.png"));
 
     /**
      * initializes the game window and everything required for the game to function
@@ -113,8 +113,8 @@ public class GamePanel {
         winPanel.setLayout(new GridBagLayout());
         winPanel.setVisible(true);
 
-        JLabel winText = new JLabel("You win!!!");
-        winText.setFont(new Font("Comic Sans MS", Font.BOLD, 100));
+        JLabel winText = new JLabel(BACKGROUND.toString());
+        winText.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
         winText.setForeground(Color.white);
 
         gameFrame.add(winPanel);

@@ -18,16 +18,16 @@ public class CardPanel extends DraggablePanel {
 
     // ASSETS
 
-    final private static ImageIcon CARD_BACK = new ImageIcon("assets/card_back.png");
-    final private static ImageIcon CARD_BASE = new ImageIcon("assets/card_base.png");
-    final private static ImageIcon CLUBS = new ImageIcon("assets/CLUBS.png");
-    final private static ImageIcon DIAMONDS = new ImageIcon("assets/DIAMONDS.png");
-    final private static ImageIcon HEARTS = new ImageIcon("assets/HEARTS.png");
-    final private static ImageIcon SPADES = new ImageIcon("assets/SPADES.png");
-    final private static ImageIcon CLUBS_SMALL = new ImageIcon("assets/CLUBS_SMALL.png");
-    final private static ImageIcon DIAMONDS_SMALL = new ImageIcon("assets/DIAMONDS_SMALL.png");
-    final private static ImageIcon HEARTS_SMALL = new ImageIcon("assets/HEARTS_SMALL.png");
-    final private static ImageIcon SPADES_SMALL = new ImageIcon("assets/SPADES_SMALL.png");
+    final private static ImageIcon CARD_BACK = new ImageIcon(CardPanel.class.getResource("assets/card_back.png"));
+    final private static ImageIcon CARD_BASE = new ImageIcon(CardPanel.class.getResource("assets/card_base.png"));
+    final private static ImageIcon CLUBS = new ImageIcon(CardPanel.class.getResource("assets/CLUBS.png"));
+    final private static ImageIcon DIAMONDS = new ImageIcon(CardPanel.class.getResource("assets/DIAMONDS.png"));
+    final private static ImageIcon HEARTS = new ImageIcon(CardPanel.class.getResource("assets/HEARTS.png"));
+    final private static ImageIcon SPADES = new ImageIcon(CardPanel.class.getResource("assets/SPADES.png"));
+    final private static ImageIcon CLUBS_SMALL = new ImageIcon(CardPanel.class.getResource("assets/CLUBS_SMALL.png"));
+    final private static ImageIcon DIAMONDS_SMALL = new ImageIcon(CardPanel.class.getResource("assets/DIAMONDS_SMALL.png"));
+    final private static ImageIcon HEARTS_SMALL = new ImageIcon(CardPanel.class.getResource("assets/HEARTS_SMALL.png"));
+    final private static ImageIcon SPADES_SMALL = new ImageIcon(CardPanel.class.getResource("assets/SPADES_SMALL.png"));
 
     public CardPanel(Suit suit, int faceValue) {
         this(suit, faceValue, 0, 0);
