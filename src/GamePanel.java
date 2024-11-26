@@ -114,8 +114,8 @@ public class GamePanel {
         winPanel.setLayout(new GridBagLayout());
         winPanel.setVisible(true);
 
-        JLabel winText = new JLabel(BACKGROUND.toString());
-        winText.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+        JLabel winText = new JLabel("You win!!!!");
+        winText.setFont(new Font("Comic Sans MS", Font.BOLD, 100));
         winText.setForeground(Color.white);
 
         gameFrame.add(winPanel);
